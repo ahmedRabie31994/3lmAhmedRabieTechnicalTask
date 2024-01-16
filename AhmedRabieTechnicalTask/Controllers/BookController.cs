@@ -24,7 +24,7 @@ namespace AhmedRabieTechnicalTask.Controllers
         {
             return Ok(_BookAppService.GetAll(parameters));
         }
-
+         
         [HttpPost]
         [Route("Book-management")]
         public IActionResult Post([FromBody] BookDto BookViewModel)
