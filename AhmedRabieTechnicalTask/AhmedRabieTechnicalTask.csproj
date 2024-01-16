@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.1.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="2.1.4" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AhmedRabieTechnicalTask.Domain.Core\AhmedRabieTechnicalTask.Domain.Core.csproj" />
+    <ProjectReference Include="..\AhmedRabieTechnicalTask.Infra.Data\AhmedRabieTechnicalTask.Infra.Data.csproj" />
+    <ProjectReference Include="..\AhmedRabieTechnicalTask.IOC\AhmedRabieTechnicalTask.IOC.csproj" />
+  </ItemGroup>
+
+
+</Project>
