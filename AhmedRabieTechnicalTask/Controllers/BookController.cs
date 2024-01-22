@@ -31,7 +31,7 @@ namespace AhmedRabieTechnicalTask.Controllers
         }
          
         [HttpPost]
-        [Route("Book-management") 
+        [Route("Book-management")]
         public IActionResult Post([FromBody] BookDto BookViewModel)
         { 
                 if (!ModelState.IsValid)
