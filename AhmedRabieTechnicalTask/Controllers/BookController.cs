@@ -15,13 +15,13 @@ namespace AhmedRabieTechnicalTask.Controllers
     public class BookController : ControllerBase
     {
         private readonly IBookService _BookAppService;
-
+         
         public BookController(
             IBookService BookAppService)
         {
             _BookAppService = BookAppService;
         }
-
+         
         [HttpGet]
         [Route("GetAll")]
         public IActionResult GetAll(string searchQuery , int pageSize, int PageNumber)
@@ -31,7 +31,7 @@ namespace AhmedRabieTechnicalTask.Controllers
         }
          
         [HttpPost]
-        [Route("Book-management")]
+        [Route("Book-management") 
         public IActionResult Post([FromBody] BookDto BookViewModel)
         { 
                 if (!ModelState.IsValid)
