@@ -45,12 +45,22 @@ namespace AhmedRabieTechnicalTask.Infra.Data.Repositories
         {
             return DbSet.Where(expression);
         }
-
         public IQueryable<TEntity> GetAll(Expression<Func<TEntity, bool>> expression, int pageNumber, int pageSize)
         {
             return DbSet.Where(expression);
         }
-
+        public IQueryable<TEntity> GetAll(Expression<Func<TEntity, bool>> expression,string includeProperties="")
+        {
+            IQueryable<TEntity> query = DbSet;
+            if (includeProperties != "")
+            {
+                foreach (var includeProperty in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(includeProperty);
+                }
+            }
+            return query.Where(expression);
+        }
         public virtual void Update(TEntity obj)
         {
             DbSet.Update(obj);
@@ -72,4 +82,5 @@ namespace AhmedRabieTechnicalTask.Infra.Data.Repositories
             GC.SuppressFinalize(this);
         }
     }
+   
 }

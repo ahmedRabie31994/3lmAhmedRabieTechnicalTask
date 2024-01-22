@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
@@ -29,9 +30,15 @@ namespace AhmedRabieTechnicalTask
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddDbContext<ApplicationDbContext>(options =>
-            //  options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-
+            services.AddCors(options =>
+            {
+                options.AddPolicy("MyPloicy", builder =>
+                {
+                    builder.AllowAnyOrigin()  // Replace with your allowed origin(s)
+                           .AllowAnyMethod()
+                           .AllowAnyHeader();
+                });
+            });
             services.AddControllers();
             services.AddSwaggerGen();
             services.AddSwaggerGen(c =>
@@ -62,6 +69,12 @@ namespace AhmedRabieTechnicalTask
 
             app.UseRouting();
 
+            app.UseCors(option =>
+          option.WithOrigins("domain information", "")
+          .AllowAnyMethod()
+          .AllowAnyHeader()
+          );  // Apply CORS policy
+            app.UseCors("MyPloicy");
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
@@ -69,9 +82,11 @@ namespace AhmedRabieTechnicalTask
                 endpoints.MapControllers();
             });
             app.UseSwagger();
-            app.UseSwaggerUI(c => {
+            app.UseSwaggerUI(c =>
+            {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Showing API V1");
             });
+
         }
     }
 }

@@ -15,6 +15,8 @@ namespace AhmedRabieTechnicalTask.Domain.Core.Interfaces
         void Remove(Guid id);
         int SaveChanges();
         IQueryable<TEntity> GetAll(Expression<Func<TEntity, bool>> expression, int pageNumber, int pageSize);
-        IQueryable<TEntity> GetAll(Expression<Func<TEntity, bool>> expression);
+         
+
+        IQueryable<TEntity> GetAll(Expression<Func<TEntity, bool>> expression, string includeProperties = "");
     }
 }

@@ -16,6 +16,7 @@ namespace AhmedRabieTechnicalTask.Application.Customer.Mapper
             }
             var ReturnedObj = new Domain.Product.Entities.Book()
             {
+                Id = item.Id,
                 Title = item.Title,
                 Description = item.Description,
                 Auther = item.Auther,
@@ -34,6 +35,7 @@ namespace AhmedRabieTechnicalTask.Application.Customer.Mapper
             }
             var ReturnedObj = new BookDto()
             {
+                Id =item.Id,
                 Title = item.Title,
                 Description = item.Description,
                 Auther = item.Auther,

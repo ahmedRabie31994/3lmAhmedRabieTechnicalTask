@@ -10,7 +10,7 @@ namespace AhmedRabieTechnicalTask.Application.Customer.Interfaces
 {
     public interface IBookService
     {
-        IEnumerable<BookDto> GetAll(BookParameter parameters);
+        BookSearchResult GetAll(BookParameter parameters);
         System.Threading.Tasks.Task<BookDto> GetById(Guid id);
         ExecutionResponse<AhmedRabieTechnicalTask.Domain.Product.Entities.Book> Create(BookDto BookViewModel);
         void Update(BookDto BookDtoViewModel);

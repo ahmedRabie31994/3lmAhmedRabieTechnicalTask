@@ -2,12 +2,16 @@
 using AhmedRabieTechnicalTask.Application.Customer.ViewModels;
 using AhmedRabieTechnicalTask.Domain.Customer.Models;
 using AhmedRabieTechnicalTask.Domain.Product.Models;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 
 namespace AhmedRabieTechnicalTask.Controllers
-{  
+{
+
+    [EnableCors("MyPloicy")]
+    [Route("Book")] 
     public class BookController : ControllerBase
     {
         private readonly IBookService _BookAppService;
@@ -19,21 +23,19 @@ namespace AhmedRabieTechnicalTask.Controllers
         }
 
         [HttpGet]
-        [Route("Book-management")]
-        public IActionResult Get(BookParameter parameters)
+        [Route("GetAll")]
+        public IActionResult GetAll(string searchQuery , int pageSize, int PageNumber)
         {
-            return Ok(_BookAppService.GetAll(parameters));
+            BookParameter param =new BookParameter() { SearchQuery = searchQuery  ,PageSize=pageSize,PageNumber=PageNumber};
+            return Ok(_BookAppService.GetAll(param));
         }
          
         [HttpPost]
         [Route("Book-management")]
         public IActionResult Post([FromBody] BookDto BookViewModel)
-        {
-            try
-            {
+        { 
                 if (!ModelState.IsValid)
-                {
-
+                { 
                     return BadRequest(BookViewModel);
                 }
                 BookViewModel.Id = Guid.NewGuid();
@@ -43,12 +45,7 @@ namespace AhmedRabieTechnicalTask.Controllers
                     return BadRequest(Model);
                 }
 
-                return Ok(Model);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex);
-            }
+                return Ok(Model); 
         }
     }
 }

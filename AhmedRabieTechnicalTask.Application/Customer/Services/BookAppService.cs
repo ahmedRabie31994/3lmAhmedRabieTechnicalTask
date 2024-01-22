@@ -7,12 +7,14 @@ using AhmedRabieTechnicalTask.Domain.Customer.Interfaces;
 using AhmedRabieTechnicalTask.Domain.Product.Entities;
 using AhmedRabieTechnicalTask.Domain.Product.Interfaces;
 using AhmedRabieTechnicalTask.Domain.Product.Models;
+using AhmedRabieTechnicalTask.Infra.Data;
 using AhmedRabieTechnicalTask.Infra.Data.Repositories;
 using AhmedRabieTechnicalTask.Infra.Data.Repositories.EventSourcing;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
@@ -33,22 +35,19 @@ namespace AhmedRabieTechnicalTask.Application.Customer.Services
 
         }
 
-        public ExecutionResponse<Book> Create(BookDto BookViewModel)
+        public ExecutionResponse<Book> Create(BookDto BookViewModel )
         {
             ExecutionResponse<AhmedRabieTechnicalTask.Domain.Product.Entities.Book> Response = new ExecutionResponse<Domain.Product.Entities.Book>();
             try
             {
                 if (BookViewModel == null)
-                {
-
+                { 
                     Response.Result = null;
                     Response.State = ResponsState.ValidationError;
                     Response.Message = "not valid Param";
-                    Response.Exception = null;
-
+                    Response.Exception = null; 
                 } 
                 var Book = BookMapping.Map(BookViewModel);
-
                 var Added = _BookRepository.AddBook(Book);
                 if (Added)
                 {
@@ -66,16 +65,25 @@ namespace AhmedRabieTechnicalTask.Application.Customer.Services
             return Response;
 
         } 
-        public IEnumerable<BookDto> GetAll(BookParameter parameters)
+        public BookSearchResult GetAll(BookParameter parameters)
         {
             if (parameters ==null)
             {
                 return null;
             }
-            Expression<Func<AhmedRabieTechnicalTask.Domain.Product.Entities.Book, bool>> expression = t => t.Deleted == parameters.Deleted
-            && (!string.IsNullOrEmpty(parameters.SearchQuery)) ? (t.Title.Contains(parameters.SearchQuery) || t.Auther.Contains(parameters.SearchQuery) || t.Description.Contains(parameters.SearchQuery)) : true;
-             return BookMapping.Map(_BookRepository.GetAll(expression, parameters.PageNumber, parameters.PageSize));
-
+            var query = _BookRepository.GetAll(item => !item.Deleted);
+            if (!string.IsNullOrEmpty(parameters.SearchQuery))
+            {
+                query = query.Where(item => item.Title.Contains(parameters.SearchQuery) || item.Description.Contains(parameters.SearchQuery) || item.Auther.Contains(parameters.SearchQuery));
+            }
+            var Res = Pagenation.PagedResult(query.OrderByDescending(z => z.PublishDate), parameters.PageNumber, parameters.PageSize);
+            return new BookSearchResult()
+            {
+                currentPage = parameters.PageNumber,
+                data = BookMapping.Map(Res.Data),
+                succeeded = true,
+                totalRecords = query.Count()
+            }; 
         }
 
         public  async Task<BookDto> GetById(Guid id)
